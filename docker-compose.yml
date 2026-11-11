@@ -1,0 +1,47 @@
+# ==============================================================================
+# OmniMCP — Production Docker Compose Configuration
+# ==============================================================================
+services:
+  omnimcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: omnimcp-gateway
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=3000
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - NO_BROWSER_OPEN=true
+      - SQLITE_DB_PATH=/app/data/omnimcp.db
+      # Master Vault Key (Required in production: 64-char hex string)
+      - OMNIMCP_ENCRYPTION_KEY=${OMNIMCP_ENCRYPTION_KEY}
+      # Role-Separated Gateway Credentials
+      - OMNIMCP_OPERATOR_TOKEN=${OMNIMCP_OPERATOR_TOKEN}
+      - OMNIMCP_AGENT_TOKEN=${OMNIMCP_AGENT_TOKEN}
+      - OMNIMCP_AGENT_TOKENS=${OMNIMCP_AGENT_TOKENS}
+      # Downstream MCP Integrations (Optional)
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
+      - CONTEXT7_API_KEY=${CONTEXT7_API_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+      - SENTRY_ORG=${SENTRY_ORG}
+      - SENTRY_PROJECT=${SENTRY_PROJECT}
+    volumes:
+      # Persistent storage volume for SQLite WAL database, profiles, audit traces, and tasks
+      - omnimcp-data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  omnimcp-data:
+    name: omnimcp-data
+    driver: local

@@ -1,0 +1,39 @@
+# Node.js dependencies & builds
+node_modules
+dist
+npm-debug.log*
+
+# Git repository metadata
+.git
+.gitignore
+.github
+
+# Sensitive environment files and local secrets
+.env
+.env.*
+!.env.example
+
+# Local SQLite databases and persistent volumes
+data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Test suites, mocks, and browser verification artifacts
+tests/
+scratch/
+*.png
+*.jpg
+*.jpeg
+*.svg
+coverage/
+.vitest/
+
+# OS and Editor metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+

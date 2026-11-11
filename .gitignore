@@ -1,0 +1,27 @@
+.env
+.env.*
+!.env.example
+
+data/
+*.db
+*.db-shm
+*.db-wal
+
+node_modules/
+dist/
+build/
+.next/
+
+playwright-report/
+test-results/
+
+logs/
+*.log
+
+scripts/git-push.cjs
+scratch/
+
+# Local MCP Client configs containing tokens
+.agents/mcp_config.json
+
+.DS_Store
